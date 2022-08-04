@@ -5,7 +5,7 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 // import "openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol"; what it looks like with remappings.txt
 
-contract CheeseTouch is ERC721Enumerable {
+contract NGMI is ERC721Enumerable {
     address private _owner; // Contract owner's address
     uint256 public counter; // Counter for the number of tokens minted
     uint256 public deadline; // Time for token
@@ -63,8 +63,8 @@ contract CheeseTouch is ERC721Enumerable {
         _;
     }
 
-    // Only create cheese when there is no nft token 'live'
-    modifier canCreateCheese() {
+    // Only create NGMI when there is no nft token 'live'
+    modifier canCreateNGMI() {
         // Current token id
         uint256 currentTokenId = counter - 1;
 
@@ -73,7 +73,7 @@ contract CheeseTouch is ERC721Enumerable {
 
         require(
             c.lastTransfer + deadline < block.timestamp,
-            "Cannot create cheese while the game is in progress"
+            "Cannot create NGMI Token while the game is in progress"
         );
         _;
     }
@@ -93,26 +93,8 @@ contract CheeseTouch is ERC721Enumerable {
 
     // ====== MINT/BURN FUNCTIONS ===== //
 
-    // @notice Override _mint function
-    // @notice Remove _beforeTokenTransfer & _afterTokenTransfer from the overridden mint function
-    //         to prevent the token from being transferred before the game starts
-    function mint(address to, uint256 tokenId) public {
-
-        _mint(_owner, counter); // Mints the token with tokenID '0'. 
-        // Game is starting with the owner (which is msg.sender)
-
-        require(to != address(0), "ERC721: mint to the zero address");
-        require(!_exists(tokenId), "ERC721: token already minted");
-
-        _owners[tokenId] = to;
-        _balances[to] += 1;
-
-        emit Transfer(address(0), to, tokenId);
-    }
-
-
-    // Anyone can mint a new token if there is only one token 'live'
-    function createCheese() public canCreateCheese {
+     // Anyone can mint a new token if there is only one token 'live'
+    function createNGMI() public canCreateNGMI {
         // Add point to the user
         scores[ownerOf(counter - 1)] += 1;
 
@@ -126,6 +108,22 @@ contract CheeseTouch is ERC721Enumerable {
         checkpoints[counter].tokenId = counter; // Set token id
 
         counter += 1; // Increment the counter
+    }
+
+    // @notice Override _mint function
+    // @notice Remove _beforeTokenTransfer & _afterTokenTransfer from the overridden mint function
+    //         to prevent the token from being transferred before the game starts
+    function mint(address to, uint256 tokenId) public {
+
+        _mint(_owner, counter); // Mints the token with tokenID '0'. 
+        // Game is starting with the owner (which is msg.sender)
+
+        require(to != address(0), "ERC721: mint to the zero address");
+        require(!_exists(tokenId), "ERC721: token already minted");
+
+        _owners[tokenId] = to;
+        _balances[to] += 1;
+        emit Transfer(address(0), to, tokenId);
     }
 
     // @notice Override _burn function
@@ -152,7 +150,7 @@ contract CheeseTouch is ERC721Enumerable {
     {
         require(
             checkpoints[tokenId].lastTransfer + deadline > block.timestamp,
-            "Cheese token can only be transferred within 24 hours after it transferred"
+            "NGMI token can only be transferred within 24 hours after it transferred"
         );
         super._beforeTokenTransfer(from, to, tokenId);
     }
@@ -176,7 +174,7 @@ contract CheeseTouch is ERC721Enumerable {
             }
 
     // Overrides totalSupply function for returning the total number of tokens
-    // In cheese touch game there will be always only one token so totalSupply will always return 1
+    // In NGMI game there will be always only one token so totalSupply will always return 1
     function totalSupply() public pure override returns (uint256) {
         return 1;
     }

@@ -6,14 +6,14 @@ import {Utilities} from "./utils/Utilities.sol";
 import {console} from "./utils/Console.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {stdCheats} from "forge-std/stdlib.sol";
-import {CheeseTouch} from "../Contract.sol";
+import {NGMI} from "../ngmi.sol";
 import "src/mocks/MockERC721.sol";
 
 contract ContractTest is DSTest {
     // nft Id
     uint256 nftId;
-    // initializes CheeseTouch contract
-    CheeseTouch public cheeseTouch;
+    // initializes NGMI contract
+    NGMI public ngmi;
     // Access Hevm via the `vm` instance (an up-to-date cheatcodes interface that's imported above)
     Vm internal immutable vm = Vm(HEVM_ADDRESS);
     // allow you to create users
@@ -51,8 +51,8 @@ contract ContractTest is DSTest {
 
     // setup method runs before every individual test
     function setUp() public {
-        // initialize CheeseTouch contract, fill in test parameters from CheeseTouch constructor
-        cheeseTouch = new CheeseTouch("TEST NFT", "NFT", "Testing");
+        // initialize NGMI contract, fill in test parameters from NGMI constructor
+        ngmi = new NGMI("TEST NFT", "NFT", "Testing");
         // For the base setUp function, we simply use the utils functions that came with the template already. They allow us to create 5 user addresses which hold Ether
         mockNFT = new MockERC721();
         utils = new Utilities();
@@ -82,7 +82,7 @@ contract ContractTest is DSTest {
         // check if owner can setbaseURI or else error occurs
         vm.prank(bob);
         vm.expectRevert(bytes('Only the owner can do this'));
-        cheeseTouch.setBaseTokenURI("test");
+        ngmi.setBaseTokenURI("test");
     }
 
     function testCannotMint () public {
@@ -92,39 +92,39 @@ contract ContractTest is DSTest {
         // test with 0 address, expected error
         vm.prank(bob);
         vm.expectRevert(bytes("ERC721: mint to the zero address"));
-        cheeseTouch.mint(bob, 2);
+        ngmi.mint(bob, 2);
 
         // test with existing token, expected error
-        cheeseTouch.mint(bobby, 2);
+        ngmi.mint(bobby, 2);
         vm.expectRevert(bytes("ERC721: token already minted"));
-        cheeseTouch.mint(bob, 2);
+        ngmi.mint(bob, 2);
     }
     
-    function testCannotCreateCheese () public {
+    function testCannotCreateNGMI () public {
         counter += 1;
 
-        vm.expectRevert(bytes("Cannot create cheese while the game is in progress"));
-        cheeseTouch.createCheese();
+        vm.expectRevert(bytes("Cannot create NGMI token while the game is in progress"));
+        ngmi.createNGMI();
     }
 
-     function testCanBurnCheese () public {
+     function testCanBurnNGMI () public {
         mockNFT.mint(1);
 
         mockNFT.burn(2);
         assertEq(_balances[address(this)], 0);
     }
 
-    function testCannotBurnCheese () public {
+    function testCannotBurnNGMI () public {
 
-        vm.expectRevert(bytes("Cannot create cheese while the game is in progress"));
-        cheeseTouch.createCheese();
+        vm.expectRevert(bytes("Cannot create NGMI token while the game is in progress"));
+        ngmi.createNGMI();
     }
 
     function testCanTransferToken () public {
         mockNFT.mint(1);
         address to = users[1];
 
-		cheeseTouch.transferFrom(address(this), to, 0);
+		ngmi.transferFrom(address(this), to, 0);
         assertEq(_balances[to], 0);
     }
 
@@ -133,7 +133,7 @@ contract ContractTest is DSTest {
         address to = users[1];
         vm.warp(2 days);
 
-        vm.expectRevert(bytes("Cheese token can only be transferred within 24 hours after it transferred"));
-        cheeseTouch.transferFrom(from, to, 0);
+        vm.expectRevert(bytes("NGMI token can only be transferred within 24 hours after it transferred"));
+        ngmi.transferFrom(from, to, 0);
     }
 }
