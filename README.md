@@ -8,4 +8,4 @@ Using OpenZeppelin's ERC721, ERC721Enumerable contracts, the NGMI contract consi
 
 Contract and tests are done with Foundry.
 
-[Contract Source](src/ngmi.sol) [Contract Test](src/test/ngmi.t.sol)
+[Contract Source](src/ngmi.sol) • [Contract Test](src/test/ngmi.t.sol)
