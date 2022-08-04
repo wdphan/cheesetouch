@@ -1,46 +1,9 @@
-# Forge Template
+# NGMI NFT Game
 
-A template for quickly getting started with forge
+The NGMI only allows 1 token to be “live” at any time. If no token is live, anyone can mint one at any time. 
 
-## Getting Started
+Players can then transfer this live token to anyone else. Once this token reaches 24 hours of being live, that token “dies” and the player who still holds it can no longer transfer it to anyone else.
 
-```
-mkdir my-project
-cd my-project
-forge init --template https://github.com/FrankieIsLost/forge-template
-git submodule update --init --recursive  ## initialize submodule dependencies
-npm install ## install development dependencies
-forge build
-forge test
-```
+Using OpenZeppelin's ERC721, ERC721Enumerable contracts, the NGMI contract consists of `_baseURI()`, `setBaseTokenURI(string memory _uri)`, `createNGMI()`, `mint(address to, uint256 tokenId`, `_burn(uint256 tokenId)`, and custom transfer hooks such as `_beforeTokenTransfer(address from, address to, uint256 tokenId)` and `_afterTokenTransfer(address from, address to, uint256 tokenId)`.
 
-## Features
-
-### Testing Utilities
-
-Includes a `Utilities.sol` contract with common testing methods (like creating users with an initial balance), as well as various other utility contracts.
-
-### Preinstalled dependencies
-
-`ds-test` for testing, `forge-std` for better cheatcode UX, and `solmate` for optimized contract implementations.  
-
-### Linting
-
-Pre-configured `solhint` and `prettier-plugin-solidity`. Can be run by
-
-```
-npm run solhint
-npm run prettier
-```
-
-### CI with Github Actions
-
-Automatically run linting and tests on pull requests.
-
-### Default Configuration
-
-Including `.gitignore`, `.vscode`, `remappings.txt`
-
-## Acknowledgement
-
-Inspired by great dapptools templates like https://github.com/gakonst/forge-template, https://github.com/gakonst/dapptools-template and https://github.com/transmissions11/dapptools-template
+[Contract Source](src/ngmi.sol)
